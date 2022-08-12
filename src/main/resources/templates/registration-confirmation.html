@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="pl"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<main class="main-content" layout:fragment="content">
+    <div class="container p-5">
+        <div class="row g-0">
+            <div class="col-md-12">
+                <section>
+                    <div>
+                        <div class="container">
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div>
+                                    <div class="card">
+                                        <div class="card-body p-5 text-center">
+
+                                            <h2 class="text-uppercase text-center mb-5">Registration complete</h2><br/>
+                                            <a href="#" th:href="@{/}">Go to main page</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
