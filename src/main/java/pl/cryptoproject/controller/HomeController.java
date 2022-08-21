@@ -8,11 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
 
-    @GetMapping("/hashtags")
-    public String hashtags(){
-        return "hashtags";
-    }
-
     @GetMapping("/login")
     public String login(){
         return "login";

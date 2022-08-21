@@ -9,9 +9,8 @@ import pl.cryptoproject.entity.Crypto;
 import pl.cryptoproject.service.CryptoService;
 import pl.cryptoproject.service.UserService;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Controller
 public class PortfolioController {
@@ -41,25 +40,15 @@ public class PortfolioController {
         return "redirect:/portfolio";
     }
 
-
     @GetMapping("/portfolio")
     public String portfolioAll(Model model) {
         Long id = userService.findUserId().get().getId();
         List<Crypto> cryptoList = cryptoService.findAllCryptoByUserId(id);
-
-        List<CryptoPortfolioDto> cryptoPortfolioDtoList = cryptoList.stream().map(crypto -> {
-            try {
-                return new CryptoPortfolioDto(crypto.getId(), crypto.getName(), crypto.getQuantity(), cryptoService.getCryptoBySymbol(crypto.getName()), crypto.getCmcId());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
-        Double sum = 0.0;
-        sum = cryptoPortfolioDtoList.stream()
-                        .mapToDouble(i -> Double.valueOf(i.getQuantity())*i.getPrice()).sum();
+        List<CryptoPortfolioDto> cryptoPortfolioDtoList = cryptoService.createCryptoPortfolioDtoList(cryptoList);
+        Double sum = cryptoService.sumPortfolio(cryptoPortfolioDtoList);
         model.addAttribute("sum", sum);
         model.addAttribute("cryptoList", cryptoPortfolioDtoList);
-        return "portfolio";
+        return "portfolio/portfolio";
     }
 
     @GetMapping("/portfolio/del/{id}")

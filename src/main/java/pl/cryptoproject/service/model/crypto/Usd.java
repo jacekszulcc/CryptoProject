@@ -1,5 +1,5 @@
 
-package pl.cryptoproject.model.crypto;
+package pl.cryptoproject.service.model.crypto;
 
 
 import com.google.gson.annotations.Expose;

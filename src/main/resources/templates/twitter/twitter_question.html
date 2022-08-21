@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="pl"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<main class="main-content" layout:fragment="content">
+    <div class="container p-5">
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="d-flex justify-content-center col-md-12">
+                    <div class="text-center p-5">
+                        <h3>
+                            <p>Enter the hashtag do you want to add, without the # sign</p>
+                        </h3>
+                    </div>
+                    <div class="text-center m-5 col-sm-4">
+                        <form action="/twitter/add" method="post">
+                            <label for="hashtag">Hashtag </label><input type="text" class="form-control" id="hashtag" name="hashtag"><br />
+                            <button type="submit" class="btn btn-success btn-lg">Add</button>
+                        </form>
+                        <br />
+                        <a href="/twitter"><button class="btn btn-light btn-sm">Back to main page</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

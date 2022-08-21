@@ -1,11 +1,12 @@
 package pl.cryptoproject.service;
 
 import org.springframework.stereotype.Service;
+import pl.cryptoproject.config.CmcConfig;
 import pl.cryptoproject.dto.CryptoDto;
+import pl.cryptoproject.dto.CryptoPortfolioDto;
 import pl.cryptoproject.entity.Crypto;
-import pl.cryptoproject.model.crypto.CryptoList;
-import pl.cryptoproject.model.crypto.Datum;
-import pl.cryptoproject.entity.User;
+import pl.cryptoproject.service.model.crypto.CryptoList;
+import pl.cryptoproject.service.model.crypto.Datum;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,29 +17,30 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CryptoService {
 
     private final CryptoRepository cryptoRepository;
+    private final CmcConfig cmcConfig;
 
-    public CryptoService(CryptoRepository cryptoRepository) {
+    public CryptoService(CryptoRepository cryptoRepository, CmcConfig cmcConfig) {
         this.cryptoRepository = cryptoRepository;
+        this.cmcConfig = cmcConfig;
     }
-
 
     public List<CryptoDto> getCrypto() throws IOException {
 
         List<CryptoDto> cryptoDtoList = new ArrayList<>();
 
-        URL url = new URL("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=100&CMC_PRO_API_KEY=8d4bdca0-468e-4979-9e71-a9caa8ab0cdd");
+        int startList = 1;
+        int endList = 100;
 
+        URL url = new URL("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=" + startList + "&limit=" + endList + "&CMC_PRO_API_KEY=" + cmcConfig.getApikey());
         InputStreamReader reader = new InputStreamReader(url.openStream());
-
         CryptoList crypto = new Gson().fromJson(reader, CryptoList.class);
-
         for (Datum datum : crypto.getData()){
-
             CryptoDto cryptoDto = new CryptoDto();
             cryptoDto.setId(datum.getId());
             cryptoDto.setName(datum.getName());
@@ -50,7 +52,6 @@ public class CryptoService {
             cryptoDto.setPercentChange24h(datum.getQuote().getUsd().getPercentChange24h());
             cryptoDto.setPercentChange7d(datum.getQuote().getUsd().getPercentChange7d());
             cryptoDto.setMarketCap(datum.getQuote().getUsd().getMarketCap());
-
             cryptoDtoList.add(cryptoDto);
         }
 
@@ -87,5 +88,21 @@ public class CryptoService {
 
     public void updateCrypto(Crypto crypto){
         cryptoRepository.save(crypto);
+    }
+
+    public List<CryptoPortfolioDto> createCryptoPortfolioDtoList(List<Crypto> list){
+        return list.stream().map(crypto -> {
+            try {
+                return new CryptoPortfolioDto(crypto.getId(), crypto.getName(), crypto.getQuantity(), getCryptoBySymbol(crypto.getName()), crypto.getCmcId());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+    }
+
+    public double sumPortfolio(List<CryptoPortfolioDto> list){
+        Double sum = 0.0;
+        return list.stream()
+                .mapToDouble(i -> Double.valueOf(i.getQuantity())*i.getPrice()).sum();
     }
 }

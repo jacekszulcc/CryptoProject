@@ -12,7 +12,18 @@ import javax.persistence.Id;
 public class Hashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     private String name;
+
+    private Long userId;
+
+    public Hashtag(String name, Long userId) {
+        this.name = name;
+        this.userId = userId;
+    }
+
+    public Hashtag() {
+
+    }
 }

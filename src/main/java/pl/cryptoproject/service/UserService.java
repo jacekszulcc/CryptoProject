@@ -61,7 +61,6 @@ public class UserService {
                 .anyMatch(authority -> authority.getAuthority().equals(ADMIN_AUTHORITY));
     }
 
-
     public Optional<User> findUserId(){
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }

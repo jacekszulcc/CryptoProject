@@ -47,6 +47,7 @@
                                     <td th:text="${#numbers.formatDecimal(crypto.getCirculatingSupply(), 1, 'COMMA', 2, 'POINT')}"></td>
                                     <td><img th:src="'https://s3.coinmarketcap.com/generated/sparklines/web/7d/2781/' + ${crypto.getId()} + '.svg'" width="100"></td>
                                 </tr>
+
                             </tbody>
                         </table>
                     </div>

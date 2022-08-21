@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html lang="pl"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+    <main class="main-content" layout:fragment="content">
+        <div class="container p-5">
+            <div class="d-flex justify-content-center row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                <a href="/twitter/add"><button type="button" class="btn btn-primary"><i class="bi bi-hash"></i>Add hashtag</button></a>
+                                <div th:each="hashtag: ${hashtagList}"><a th:href="'/twitter/%23'+${hashtag.getName()}"><button type="button" class="btn btn-light"><i class="bi bi-hash"></i><span th:text="${hashtag.getName()}"></span></button></a><a th:href="'/twitter/del/'+${hashtag.getId()}" class="link-secondary" onclick="return confirm('Are you sure?')"><i class="bi bi-trash"></i></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <table>
+                                <thead>
+                                <tr th:each="twitter: ${twitterList}">
+                                    <table class="table small">
+                                        <thead>
+                                        <tr class="table">
+                                            <td rowspan="3"><img th:src="${twitter.getImageUrl()}" style="width:50px; height:50px; border-radius:50%; border:0px;"></td>
+                                            <td colspan="3"><span th:text="${twitter.getName()}" style="font-weight: bold;"></span><span th:utext="'&nbsp;&nbsp;&nbsp;&nbsp;@&nbsp;' + ${twitter.getScreenName()} + '&nbsp;&nbsp;&nbsp;&nbsp;'"></span><i class="bi bi-dot"></i><span th:utext="'&nbsp;&nbsp;&nbsp;&nbsp;' + ${#temporals.format(twitter.getDateTime(), 'dd-MM-yyyy HH:mm')}"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"><a th:href="'https://twitter.com/' + ${twitter.getScreenName()} + '/status/' + ${twitter.getId()}" th:text="${twitter.getText()}" class="link-secondary text-decoration-none"></a> </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"><i class="bi bi-recycle"></i><span th:utext="' ' + ${twitter.getRetweetCount()} + '&nbsp;&nbsp;&nbsp;&nbsp;'"></span> <i class='bi bi-heart'></i><span th:text="' ' + ${twitter.getFavoriteCount()}"></span> </td>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>

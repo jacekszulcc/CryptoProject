@@ -46,15 +46,12 @@ public class CryptoController {
     @GetMapping({"/", "/top100"})
     public String home(Model model) throws IOException {
         Long userId = userService.findUserId().get().getId();
-
-//        List<Crypto> allCryptoPortfolioList = cryptoService.findAllCryptoByUserId(userId);
-//        List<CryptoFavorite> allCryptoFavoriteList = cryptoFavoriteService.findAllCryptoFavoriteByUserId(userId);
-
+        List<Crypto> allCryptoPortfolioList = cryptoService.findAllCryptoByUserId(userId);
+        List<CryptoFavorite> allCryptoFavoriteList = cryptoFavoriteService.findAllCryptoFavoriteByUserId(userId);
         List<CryptoDto> cryptoDtoList = cryptoService.getCrypto();
-//        model.addAttribute("cryptoPortfolioList", allCryptoPortfolioList);
-//        model.addAttribute("cryptoFavoriteList", allCryptoFavoriteList);
+        model.addAttribute("cryptoPortfolioList", allCryptoPortfolioList);
+        model.addAttribute("cryptoFavoriteList", allCryptoFavoriteList);
         model.addAttribute("cryptoList", cryptoDtoList);
-
         return "index";
     }
 
