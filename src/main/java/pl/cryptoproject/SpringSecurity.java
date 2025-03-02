@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
 @Configuration
 class SpringSecurity {
 
@@ -22,24 +21,27 @@ class SpringSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
-                .mvcMatchers("/register", "/confirmation", "/crypto").permitAll()
+                .requestMatchers("/register", "/confirmation", "/crypto").permitAll() // Zastąp mvcMatchers
                 .anyRequest().authenticated()
         );
-        http.formLogin(login -> login.loginPage("/login").permitAll());
+        http.formLogin(login -> login
+                .loginPage("/login")
+                .permitAll()
+        );
         http.logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout/**", HttpMethod.GET.name()))
-                .logoutSuccessUrl("/login?logout").permitAll()
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
         );
-        http.csrf().disable();
+        http.csrf(csrf -> csrf.disable());
         return http.build();
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().mvcMatchers(
+        return web -> web.ignoring().requestMatchers( // Zastąp mvcMatchers
                 "/img/**",
                 "/styles/**"
         );
     }
 }
-
